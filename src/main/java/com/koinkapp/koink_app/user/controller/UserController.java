@@ -1,6 +1,6 @@
-package com.koinkapp.koink_app.auth.controller;
+package com.koinkapp.koink_app.user.controller;
 
-import com.koinkapp.koink_app.auth.model.User;
+import com.koinkapp.koink_app.user.model.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

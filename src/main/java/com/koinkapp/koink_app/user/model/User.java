@@ -1,6 +1,7 @@
-package com.koinkapp.koink_app.auth.model;
+package com.koinkapp.koink_app.user.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.koinkapp.koink_app.auth.model.AuthProvider;
 import jakarta.persistence.*;
 import lombok.*;
 

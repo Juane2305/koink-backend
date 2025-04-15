@@ -1,6 +1,6 @@
-package com.koinkapp.koink_app.auth.repository;
+package com.koinkapp.koink_app.user.repository;
 
-import com.koinkapp.koink_app.auth.model.User;
+import com.koinkapp.koink_app.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

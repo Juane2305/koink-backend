@@ -1,7 +1,7 @@
 package com.koinkapp.koink_app.auth.security;
 
-import com.koinkapp.koink_app.auth.model.User;
-import com.koinkapp.koink_app.auth.repository.UserRepository;
+import com.koinkapp.koink_app.user.model.User;
+import com.koinkapp.koink_app.user.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

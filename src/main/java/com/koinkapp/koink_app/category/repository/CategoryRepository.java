@@ -1,6 +1,6 @@
 package com.koinkapp.koink_app.category.repository;
 
-import com.koinkapp.koink_app.auth.model.User;
+import com.koinkapp.koink_app.user.model.User;
 import com.koinkapp.koink_app.category.model.Category;
 import com.koinkapp.koink_app.transaction.model.TransactionType;
 import org.springframework.data.jpa.repository.JpaRepository;

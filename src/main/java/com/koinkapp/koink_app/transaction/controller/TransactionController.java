@@ -1,6 +1,6 @@
 package com.koinkapp.koink_app.transaction.controller;
 
-import com.koinkapp.koink_app.auth.model.User;
+import com.koinkapp.koink_app.user.model.User;
 import com.koinkapp.koink_app.transaction.dto.CreateTransactionRequest;
 import com.koinkapp.koink_app.transaction.dto.TransactionResponse;
 import com.koinkapp.koink_app.transaction.dto.UpdateTransactionRequest;
