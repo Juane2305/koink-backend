@@ -26,10 +26,16 @@ public class CategoryService {
     }
 
     public Category createCategory(CreateCategoryRequest request, User user) {
+        String trimmedName = request.getName().trim();
+        if (categoryRepository.existsByOwnerAndNameIgnoreCase(user, trimmedName)) {
+            throw new IllegalArgumentException("Ya existe una categoría con ese nombre.");
+        }
+
         Category category = new Category();
         category.setName(request.getName());
         category.setType(request.getType());
         category.setOwner(user);
+
         return categoryRepository.save(category);
     }
 

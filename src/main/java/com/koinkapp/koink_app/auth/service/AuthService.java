@@ -34,6 +34,7 @@ public class AuthService {
                 .provider(AuthProvider.LOCAL)
                 .emailVerified(false)
                 .lastLogin(LocalDateTime.now())
+                .alertsByEmail(true)
                 .build();
 
         userRepository.save(user);

@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -34,6 +35,10 @@ public class TransactionService {
 
         if (category.getOwner() != null && !category.getOwner().getId().equals(user.getId())) {
             throw new IllegalArgumentException("No tenés acceso a esta categoría.");
+        }
+
+        if (request.getAmount() == null || request.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("El monto debe ser mayor a cero.");
         }
 
         Transaction transaction = new Transaction();

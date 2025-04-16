@@ -1,6 +1,7 @@
 package com.koinkapp.koink_app.auth.security;
 
 
+import com.koinkapp.koink_app.user.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -34,11 +35,15 @@ public class JwtTokenProvider {
         Date expiryDate = new Date(now.getTime() + jwtExpiration);
 
         return Jwts.builder()
-                .setSubject(email) // esto es lo que vas a recuperar después
+                .setSubject(email)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    public String generateToken(User user) {
+        return generateToken(user.getEmail());
     }
 
     public boolean validateToken(String token) {

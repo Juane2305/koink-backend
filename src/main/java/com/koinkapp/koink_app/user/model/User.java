@@ -35,4 +35,6 @@ public class User {
     @JsonIgnore
     private AuthProvider provider;
     private boolean emailVerified;
+    @Column(nullable = false)
+    private boolean alertsByEmail = true;
 }

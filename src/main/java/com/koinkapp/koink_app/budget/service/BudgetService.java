@@ -15,7 +15,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.koinkapp.koink_app.budget.enums.BudgetPeriod.*;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +39,11 @@ public class BudgetService {
                 .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada."));
 
         if (category.getOwner() != null && !category.getOwner().getId().equals(user.getId())) {
-            throw new SecurityException("No tenés permiso para usar esta categoríá.");
+            throw new SecurityException("No tenés permiso para usar esta categoría.");
+        }
+
+        if (limitAmount == null || limitAmount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("El monto límite debe ser mayor a cero.");
         }
 
         LocalDate endDate = switch (period) {
@@ -50,6 +53,10 @@ public class BudgetService {
             case ANNUAL -> startDate.plusYears(1).minusDays(1);
         };
 
+        if (budgetRepository.existsOverlappingBudget(user.getId(), categoryId, startDate, endDate)) {
+            throw new IllegalArgumentException("Ya existe un presupuesto para esa categoría en el rango especificado.");
+        }
+
         Budget budget = new Budget();
         budget.setUser(user);
         budget.setCategory(category);
@@ -58,6 +65,7 @@ public class BudgetService {
         budget.setStartDate(startDate);
         budget.setEndDate(endDate);
         budget.setActive(true);
+
 
         return budgetRepository.save(budget);
     }
