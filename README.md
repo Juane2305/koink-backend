@@ -1,3 +1,4 @@
+
 # 💰 Koink - Backend
 
 Koink es una aplicación web de **gestión de finanzas personales y familiares**, diseñada para ayudarte a controlar tus ingresos, gastos, y presupuestos de forma clara, segura y profesional.
@@ -11,7 +12,7 @@ Este repositorio contiene el backend desarrollado en **Java 17 + Spring Boot 3.4
 ### 🔐 Autenticación
 - Registro con email y contraseña
 - Login seguro con JWT
-- Login con Google (próxima versión)
+- ✅ Login con Google totalmente funcional
 - Endpoint `/user/me` para obtener perfil autenticado
 - Protección de rutas privadas
 - Ocultamiento de datos sensibles (`password`, `provider`)
@@ -19,21 +20,20 @@ Este repositorio contiene el backend desarrollado en **Java 17 + Spring Boot 3.4
 ### 💸 Transacciones
 - CRUD completo de ingresos y egresos
 - Tipado por enum (`INCOME`, `EXPENSE`)
-- Validaciones de fecha, propiedad y categoría
+- Validaciones de monto positivo y categoría válida
 - Asociación automática con el usuario autenticado
 
 ### 🗂️ Categorías
 - Categorías predeterminadas + personalizadas
 - CRUD completo con validación de ownership
-- Asociación con usuario (o públicas)
+- Prevención de duplicados por nombre
 - Reutilizables en transacciones y presupuestos
 
 ### 📊 Presupuestos
 - Creación de presupuestos por categoría
 - Períodos: `DAILY`, `WEEKLY`, `MONTHLY`, `ANNUAL`
 - Cálculo automático de fecha de fin
-- Asociación con usuario
-- Control de acceso y edición segura
+- Prevención de solapamientos por categoría
 - Eliminación protegida si está en uso
 
 ### 📈 Dashboard financiero
@@ -41,6 +41,18 @@ Este repositorio contiene el backend desarrollado en **Java 17 + Spring Boot 3.4
 - Balance calculado automáticamente
 - Transacciones recientes
 - Presupuestos activos con progreso actual
+
+### 📤 Exportación de reportes (PDF)
+- Exportación anual en formato PDF
+- Tabla mensual con nombre del mes y total gastado
+- Sumatoria final del año con formato argentino (`2.559.500,00`)
+- Descargable vía endpoint protegido
+
+### 📬 Alertas por presupuesto superado
+- Revisión automática cada hora con `@Scheduled`
+- Envío de email a usuarios con presupuestos excedidos
+- Usa Mailtrap como entorno de testing
+- Respeta preferencia del usuario (`alertsByEmail`)
 
 ### 🌐 Moneda e Idioma
 - Moneda configurable por usuario (ej: ARS, USD, EUR)
@@ -55,6 +67,8 @@ Este repositorio contiene el backend desarrollado en **Java 17 + Spring Boot 3.4
 - Spring Security + JWT
 - JPA (Hibernate) + MySQL
 - Maven
+- OpenPDF (para exportar reportes)
+- Mailtrap (testing de email)
 - Postman (para testing)
 - GitHub (versionado)
 
@@ -66,6 +80,7 @@ Este repositorio contiene el backend desarrollado en **Java 17 + Spring Boot 3.4
 - JWT firmado con clave secreta
 - Protección de rutas y datos sensibles
 - Filtro de autenticación personalizado
+- Validaciones de propiedad y datos por usuario
 
 ---
 
@@ -86,6 +101,11 @@ spring.datasource.password=TU_PASSWORD
 app.jwt.secret=TU_SECRETO
 app.jwt.expiration=3600000
 
+spring.mail.host=sandbox.smtp.mailtrap.io
+spring.mail.port=2525
+spring.mail.username=TU_MAILTRAP_USER
+spring.mail.password=TU_MAILTRAP_PASSWORD
+
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
 ```
@@ -98,13 +118,13 @@ spring.jpa.show-sql=true
 
 ---
 
-## ✨ Próximas funcionalidades
+## ✨ Próximas funcionalidades (v2.0)
 
-- 📧 Alertas automáticas por mail al superar presupuestos
-- 📤 Exportación de movimientos (CSV / PDF)
-- 📅 Reportes y filtros por fecha y categoría
-- 🌐 Login con Google
-- 📊 Visualizaciones en frontend con gráficos e insights
+- 📊 Reportes filtrables por categoría y fecha
+- 🧾 Exportación por categoría y por mes (PDF / CSV)
+- 🧠 Sugerencias automáticas basadas en hábitos de gasto
+- 🌐 Login con GitHub
+- 🧮 Cálculo de ahorro mensual y metas financieras
 
 ---
 
