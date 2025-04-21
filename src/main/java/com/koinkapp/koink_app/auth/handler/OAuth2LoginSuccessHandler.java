@@ -49,6 +49,6 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         String jwt = jwtTokenProvider.generateToken(user);
 
 
-        response.sendRedirect("http://localhost:5173/oauth2/redirect?token=" + jwt + "&new=" + isNew);
+        response.sendRedirect("https://koinkapp.com/oauth2/redirect?token=" + jwt + "&new=" + isNew);
     }
 }
