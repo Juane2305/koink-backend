@@ -62,7 +62,7 @@ public class JwtTokenProvider {
                 .parseClaimsJws(token)
                 .getBody();
 
-        return claims.getSubject(); // lo que guardamos como setSubject
+        return claims.getSubject();
     }
 
 }

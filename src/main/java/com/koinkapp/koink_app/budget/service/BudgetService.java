@@ -1,11 +1,13 @@
 package com.koinkapp.koink_app.budget.service;
 
+import com.koinkapp.koink_app.budget.dto.ActiveBudgetResponse;
 import com.koinkapp.koink_app.budget.dto.UpdateBudgetRequest;
 import com.koinkapp.koink_app.budget.enums.BudgetPeriod;
 import com.koinkapp.koink_app.budget.model.Budget;
 import com.koinkapp.koink_app.budget.repository.BudgetRepository;
 import com.koinkapp.koink_app.category.model.Category;
 import com.koinkapp.koink_app.category.repository.CategoryRepository;
+import com.koinkapp.koink_app.transaction.repository.TransactionRepository;
 import com.koinkapp.koink_app.user.model.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ public class BudgetService {
 
     private final BudgetRepository budgetRepository;
     private final CategoryRepository categoryRepository;
+    private final TransactionRepository transactionRepository;
 
     private LocalDate calculateEndDate(LocalDate startDate, BudgetPeriod period) {
         return switch (period) {
@@ -134,6 +137,29 @@ public class BudgetService {
         }
 
         budgetRepository.delete(budget);
+    }
+
+    public List<ActiveBudgetResponse> getActiveBudgetsWithSpending(User user) {
+        LocalDate today = LocalDate.now();
+        List<Budget> activeBudgets = budgetRepository.findByUserAndActiveTrue(user);
+
+        return activeBudgets.stream()
+                .filter(b -> !today.isBefore(b.getStartDate()) && !today.isAfter(b.getEndDate()))
+                .map(budget -> {
+                    BigDecimal spent = transactionRepository.sumAmountByCategoryAndPeriod(
+                            user.getId(),
+                            budget.getCategory().getId(),
+                            budget.getStartDate(),
+                            budget.getEndDate()
+                    );
+                    return new ActiveBudgetResponse(
+                            budget.getId(),
+                            budget.getCategory().getName(),
+                            budget.getLimitAmount(),
+                            spent != null ? spent : BigDecimal.ZERO
+                    );
+                })
+                .toList();
     }
 
 }

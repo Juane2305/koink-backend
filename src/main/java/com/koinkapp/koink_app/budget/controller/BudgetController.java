@@ -1,5 +1,6 @@
 package com.koinkapp.koink_app.budget.controller;
 
+import com.koinkapp.koink_app.budget.dto.ActiveBudgetResponse;
 import com.koinkapp.koink_app.budget.dto.CreateBudgetRequest;
 import com.koinkapp.koink_app.budget.dto.UpdateBudgetRequest;
 import com.koinkapp.koink_app.budget.model.Budget;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/budgets")
+@RequestMapping("/api/budgets")
 @RequiredArgsConstructor
 public class BudgetController {
 
@@ -41,6 +42,16 @@ public class BudgetController {
         List<Budget> budgets = budgetService.getBudgetsByUser(user);
         return ResponseEntity.ok(budgets);
     }
+
+
+    @GetMapping("/active")
+    public ResponseEntity<List<ActiveBudgetResponse>> getActiveWithSpending(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        List<ActiveBudgetResponse> response = budgetService.getActiveBudgetsWithSpending(user);
+        return ResponseEntity.ok(response);
+    }
+
+
 
     @PutMapping("/{id}")
     public ResponseEntity<String> updateBudget(@PathVariable Long id,

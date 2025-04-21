@@ -25,7 +25,6 @@ public class AuthService {
         if(userRepository.existsByEmail(request.getEmail())){
             throw new RuntimeException("Email already registered");
         }
-        //si el mail no está en la db, dejamos crear un usuario
         User user = User.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))

@@ -33,6 +33,8 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         String name = (String) attributes.get("name");
 
         Optional<User> existingUser = userRepository.findByEmail(email);
+        boolean isNew = existingUser.isEmpty(); // ✅ MOVIDO ARRIBA
+
         User user = existingUser.orElseGet(() -> {
             User newUser = new User();
             newUser.setEmail(email);
@@ -40,11 +42,13 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             newUser.setProvider(AuthProvider.GOOGLE);
             newUser.setAlertsByEmail(true);
             newUser.setCurrency("ARS");
+            newUser.setEmailVerified(true);
             return userRepository.save(newUser);
         });
 
         String jwt = jwtTokenProvider.generateToken(user);
 
-        response.sendRedirect("http://localhost:5173/oauth2/redirect?token=" + jwt);
+
+        response.sendRedirect("http://localhost:5173/oauth2/redirect?token=" + jwt + "&new=" + isNew);
     }
 }
