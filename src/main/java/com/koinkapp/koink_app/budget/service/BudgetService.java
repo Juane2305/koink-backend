@@ -12,7 +12,9 @@ import com.koinkapp.koink_app.transaction.repository.TransactionRepository;
 import com.koinkapp.koink_app.user.model.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -58,7 +60,7 @@ public class BudgetService {
         };
 
         if (budgetRepository.existsOverlappingBudget(user.getId(), categoryId, startDate, endDate)) {
-            throw new IllegalArgumentException("Ya existe un presupuesto para esa categoría en el rango especificado.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ya existe un presupuesto para esa categoría en el rango especificado.");
         }
 
         Budget budget = new Budget();
