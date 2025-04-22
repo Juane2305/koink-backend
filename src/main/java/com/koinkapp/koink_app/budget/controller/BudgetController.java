@@ -1,6 +1,7 @@
 package com.koinkapp.koink_app.budget.controller;
 
 import com.koinkapp.koink_app.budget.dto.ActiveBudgetResponse;
+import com.koinkapp.koink_app.budget.dto.BudgetResponse;
 import com.koinkapp.koink_app.budget.dto.CreateBudgetRequest;
 import com.koinkapp.koink_app.budget.dto.UpdateBudgetRequest;
 import com.koinkapp.koink_app.budget.model.Budget;
@@ -37,11 +38,12 @@ public class BudgetController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Budget>> getAll(Authentication authentication) {
+    public ResponseEntity<List<BudgetResponse>> getAll(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-        List<Budget> budgets = budgetService.getBudgetsByUser(user);
+        List<BudgetResponse> budgets = budgetService.getBudgetsWithSpending(user);
         return ResponseEntity.ok(budgets);
     }
+
 
 
     @GetMapping("/active")

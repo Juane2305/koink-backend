@@ -1,6 +1,7 @@
 package com.koinkapp.koink_app.budget.service;
 
 import com.koinkapp.koink_app.budget.dto.ActiveBudgetResponse;
+import com.koinkapp.koink_app.budget.dto.BudgetResponse;
 import com.koinkapp.koink_app.budget.dto.UpdateBudgetRequest;
 import com.koinkapp.koink_app.budget.enums.BudgetPeriod;
 import com.koinkapp.koink_app.budget.model.Budget;
@@ -73,9 +74,29 @@ public class BudgetService {
         return budgetRepository.save(budget);
     }
 
-    public List<Budget> getBudgetsByUser(User user) {
-        return budgetRepository.findAllByUser(user);
+    public List<BudgetResponse> getBudgetsWithSpending(User user) {
+        List<Budget> budgets = budgetRepository.findAllByUser(user);
+
+        return budgets.stream().map(budget -> {
+            BigDecimal spent = transactionRepository.sumAmountByCategoryAndPeriod(
+                    user.getId(),
+                    budget.getCategory().getId(),
+                    budget.getStartDate(),
+                    budget.getEndDate()
+            );
+            return new BudgetResponse(
+                    budget.getId(),
+                    budget.getCategory().getName(),
+                    budget.getCategory().getId(),
+                    budget.getPeriod(),
+                    budget.getLimitAmount(),
+                    spent != null ? spent : BigDecimal.ZERO,
+                    budget.getStartDate(),
+                    budget.getEndDate()
+            );
+        }).toList();
     }
+
 
     @Transactional
     public void updateBudget(Long budgetId, UpdateBudgetRequest request, User user) {
