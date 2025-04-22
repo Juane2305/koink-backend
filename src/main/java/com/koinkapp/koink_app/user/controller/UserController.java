@@ -21,17 +21,15 @@ public class UserController {
     }
 
 
-    @GetMapping("/preferences")
-    public UserPreferencesDTO getPreferences(Authentication authentication) {
+    @PutMapping("/me")
+    public void updateProfile(@RequestBody UserPreferencesDTO dto, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-        return new UserPreferencesDTO(user.isAlertsByEmail());
-    }
-
-    @PutMapping("/preferences")
-    public void updatePreferences(@RequestBody UserPreferencesDTO dto, Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
+        user.setName(dto.name());
+        user.setCurrency(dto.currency());
         user.setAlertsByEmail(dto.alertsByEmail());
+        user.setAvatar(dto.avatar()); // 👈 nuevo
         userRepository.save(user);
     }
+
 
 }
