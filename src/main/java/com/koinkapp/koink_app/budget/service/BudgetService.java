@@ -59,9 +59,6 @@ public class BudgetService {
             case ANNUAL -> startDate.plusYears(1).minusDays(1);
         };
 
-        if (budgetRepository.existsOverlappingBudget(user.getId(), categoryId, startDate, endDate)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Ya existe un presupuesto para esa categoría en el rango especificado.");
-        }
 
         Budget budget = new Budget();
         budget.setUser(user);
