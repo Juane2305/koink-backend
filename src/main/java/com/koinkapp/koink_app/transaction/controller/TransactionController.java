@@ -1,5 +1,8 @@
 package com.koinkapp.koink_app.transaction.controller;
 
+import com.koinkapp.koink_app.report.dto.MonthlyCategoryReportDTO;
+import com.koinkapp.koink_app.report.dto.MonthlySpendingDTO;
+import com.koinkapp.koink_app.transaction.repository.TransactionRepository;
 import com.koinkapp.koink_app.user.model.User;
 import com.koinkapp.koink_app.transaction.dto.CreateTransactionRequest;
 import com.koinkapp.koink_app.transaction.dto.TransactionResponse;
@@ -11,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -19,6 +23,7 @@ import java.util.List;
 public class TransactionController {
 
     private final TransactionService transactionService;
+    private final TransactionRepository transactionRepository;
 
     @PostMapping
     public ResponseEntity<String> create(@Valid @RequestBody CreateTransactionRequest request, Authentication authentication) {
@@ -58,4 +63,26 @@ public class TransactionController {
         transactionService.deleteTransaction(id, user);
         return ResponseEntity.ok("Transacción eliminada con éxito.");
     }
+
+
+    @GetMapping("/stats/by-category/current-month")
+    public ResponseEntity<List<MonthlyCategoryReportDTO>> getCurrentMonthSpendingByCategory(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        LocalDate now = LocalDate.now();
+        int month = now.getMonthValue();
+        int year = now.getYear();
+
+        List<MonthlyCategoryReportDTO> report = transactionRepository.getMonthlySpendingByCategory(user.getId(), month, year);
+        return ResponseEntity.ok(report);
+    }
+
+    @GetMapping("/stats/by-month")
+    public ResponseEntity<List<MonthlySpendingDTO>> getSpendingByMonth(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        int year = LocalDate.now().getYear();
+
+        List<MonthlySpendingDTO> report = transactionRepository.getMonthlySpendingByYear(user.getId(), year);
+        return ResponseEntity.ok(report);
+    }
+
 }
