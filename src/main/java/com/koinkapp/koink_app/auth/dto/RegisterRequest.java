@@ -10,4 +10,5 @@ public class RegisterRequest {
     private String password;
     private String name;
     private String currency;
+    private String avatar;
 }

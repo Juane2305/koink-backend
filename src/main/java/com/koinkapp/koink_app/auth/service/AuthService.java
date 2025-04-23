@@ -30,10 +30,12 @@ public class AuthService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .name(request.getName())
                 .currency(request.getCurrency())
+                .avatar(request.getAvatar())
                 .provider(AuthProvider.LOCAL)
                 .emailVerified(false)
                 .lastLogin(LocalDateTime.now())
                 .alertsByEmail(true)
+
                 .build();
 
         userRepository.save(user);
