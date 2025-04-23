@@ -176,7 +176,10 @@ public class BudgetService {
                             budget.getId(),
                             budget.getCategory().getName(),
                             budget.getLimitAmount(),
-                            spent != null ? spent : BigDecimal.ZERO
+                            spent != null ? spent : BigDecimal.ZERO,
+                            budget.getStartDate(),
+                            budget.getEndDate(),
+                            budget.getPeriod()
                     );
                 })
                 .toList();
