@@ -57,41 +57,4 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate
             );
-
-
-    @Query("""
-    SELECT new com.koinkapp.koink_app.report.dto.MonthlyCategoryReportDTO(
-        t.category.name,
-        SUM(t.amount)
-    )
-    FROM Transaction t
-    WHERE t.user.id = :userId
-      AND t.type = 'EXPENSE'
-      AND MONTH(t.date) = :month
-      AND YEAR(t.date) = :year
-    GROUP BY t.category.name
-""")
-    List<MonthlyCategoryReportDTO> getMonthlySpendingByCategory(
-            @Param("userId") Long userId,
-            @Param("month") int month,
-            @Param("year") int year
-    );
-
-
-    @Query("""
-    SELECT new com.koinkapp.koink_app.report.dto.MonthlySpendingDTO(
-        MONTH(t.date),
-        SUM(t.amount)
-    )
-    FROM Transaction t
-    WHERE t.user.id = :userId
-      AND t.type = 'EXPENSE'
-      AND YEAR(t.date) = :year
-    GROUP BY MONTH(t.date)
-    ORDER BY MONTH(t.date)
-""")
-    List<MonthlySpendingDTO> getMonthlySpendingByYear(
-            @Param("userId") Long userId,
-            @Param("year") int year
-    );
 }

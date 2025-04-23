@@ -64,25 +64,4 @@ public class TransactionController {
         return ResponseEntity.ok("Transacción eliminada con éxito.");
     }
 
-
-    @GetMapping("/stats/by-category/current-month")
-    public ResponseEntity<List<MonthlyCategoryReportDTO>> getCurrentMonthSpendingByCategory(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        LocalDate now = LocalDate.now();
-        int month = now.getMonthValue();
-        int year = now.getYear();
-
-        List<MonthlyCategoryReportDTO> report = transactionRepository.getMonthlySpendingByCategory(user.getId(), month, year);
-        return ResponseEntity.ok(report);
-    }
-
-    @GetMapping("/stats/by-month")
-    public ResponseEntity<List<MonthlySpendingDTO>> getSpendingByMonth(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        int year = LocalDate.now().getYear();
-
-        List<MonthlySpendingDTO> report = transactionRepository.getMonthlySpendingByYear(user.getId(), year);
-        return ResponseEntity.ok(report);
-    }
-
 }
