@@ -4,7 +4,8 @@ import com.koinkapp.koink_app.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+
 
 @Entity
 @Getter
@@ -25,6 +26,6 @@ public class RefreshToken {
     private User user;
 
     @Column(nullable = false)
-    private LocalDateTime expiryDate;
+    private Instant expiryDate;
 }
 
