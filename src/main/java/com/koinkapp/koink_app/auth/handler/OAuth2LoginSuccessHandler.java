@@ -1,9 +1,7 @@
 package com.koinkapp.koink_app.auth.handler;
 
 import com.koinkapp.koink_app.auth.model.AuthProvider;
-import com.koinkapp.koink_app.auth.model.RefreshToken;
 import com.koinkapp.koink_app.auth.security.JwtTokenProvider;
-import com.koinkapp.koink_app.auth.service.RefreshTokenService;
 import com.koinkapp.koink_app.user.model.User;
 import com.koinkapp.koink_app.user.repository.UserRepository;
 import jakarta.servlet.ServletException;
@@ -25,7 +23,6 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
-    private final RefreshTokenService refreshTokenService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -50,11 +47,9 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         });
 
         String accessToken = jwtTokenProvider.generateToken(user);
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
 
-        String redirectUrl = String.format("https://koinkapp.com/oauth2/redirect?token=%s&refreshToken=%s&new=%s",
+        String redirectUrl = String.format("https://koinkapp.com/oauth2/redirect?token=%s&new=%s",
                 accessToken,
-                refreshToken.getToken(),
                 isNew);
 
         response.sendRedirect(redirectUrl);

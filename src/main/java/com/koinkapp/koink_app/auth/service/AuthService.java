@@ -20,7 +20,6 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
-    private final RefreshTokenService refreshTokenService;
 
     public void register(RegisterRequest request) {
         if(userRepository.existsByEmail(request.getEmail())){
@@ -54,10 +53,9 @@ public class AuthService {
         userRepository.save(user);
 
         String token = jwtTokenProvider.generateToken(user.getEmail());
-        String refreshToken = refreshTokenService.createRefreshToken(user).getToken();
-
-        return new AuthResponse(token, refreshToken, user.getName());
+        return new AuthResponse(token, user.getName());
     }
+
 
 
 }
