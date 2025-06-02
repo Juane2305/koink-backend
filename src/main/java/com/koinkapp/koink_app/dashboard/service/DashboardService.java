@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,15 +22,22 @@ public class DashboardService {
     private final TransactionRepository transactionRepository;
     private final BudgetRepository budgetRepository;
 
-    public DashboardResponse getDashboard(User user) {
-        BigDecimal totalIncome = transactionRepository.getTotalAmountByTypeAndUser(TransactionType.INCOME, user.getId())
+    public DashboardResponse getDashboard(User user, LocalDate startDate, LocalDate endDate) {
+
+        // Ingresos y egresos del período
+        BigDecimal totalIncome = transactionRepository.getTotalAmountByTypeAndUserAndDateRange(
+                        TransactionType.INCOME, user.getId(), startDate, endDate)
                 .orElse(BigDecimal.ZERO);
-        BigDecimal totalExpense = transactionRepository.getTotalAmountByTypeAndUser(TransactionType.EXPENSE, user.getId())
+
+        BigDecimal totalExpense = transactionRepository.getTotalAmountByTypeAndUserAndDateRange(
+                        TransactionType.EXPENSE, user.getId(), startDate, endDate)
                 .orElse(BigDecimal.ZERO);
+
         BigDecimal balance = totalIncome.subtract(totalExpense);
 
+        // Transacciones recientes del período (limit 5)
         List<RecentTransactionDTO> recentTransactions = transactionRepository
-                .findTop5ByUserOrderByDateDesc(user)
+                .findTop5ByUserAndDateBetweenOrderByDateDesc(user, startDate, endDate)
                 .stream()
                 .map(t -> new RecentTransactionDTO(
                         t.getId(),
@@ -41,7 +49,7 @@ public class DashboardService {
                 ))
                 .collect(Collectors.toList());
 
-
+        // Presupuestos activos (se mantienen igual, son independientes del período)
         List<BudgetSummaryDTO> activeBudgets = budgetRepository.findByUserAndActiveTrue(user)
                 .stream()
                 .map(b -> {

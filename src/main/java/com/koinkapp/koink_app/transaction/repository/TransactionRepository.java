@@ -94,4 +94,26 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             @Param("userId") Long userId,
             @Param("year") int year
     );
+
+    // 🔹 Total por tipo Y rango de fechas
+    @Query("""
+    SELECT SUM(t.amount)
+    FROM Transaction t
+    WHERE t.user.id = :userId
+      AND t.type = :type
+      AND t.date BETWEEN :startDate AND :endDate
+""")
+    Optional<BigDecimal> getTotalAmountByTypeAndUserAndDateRange(
+            @Param("type") TransactionType type,
+            @Param("userId") Long userId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate
+    );
+
+    // 🔹 Últimas 5 transacciones del período
+    List<Transaction> findTop5ByUserAndDateBetweenOrderByDateDesc(
+            User user,
+            LocalDate startDate,
+            LocalDate endDate
+    );
 }
